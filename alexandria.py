@@ -1,4 +1,3 @@
-import json
 import requests
 
 
@@ -54,4 +53,3 @@ class Alexandria:
             raise Exception(r.status_code, r.json()['error']['message'])
         else:
             raise Exception(message, r.status_code, r.json()['error']['message'])
-
