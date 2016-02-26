@@ -4,7 +4,6 @@
     <list default="true" id="b10385d8-40f2-4581-afd8-3ffd88698109" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/alexandria.py" afterPath="$PROJECT_DIR$/alexandria.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
     </list>
     <ignored path="naga.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -25,10 +24,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="alexandria.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="alexandria.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/alexandria.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="0.23734178">
               <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
@@ -37,11 +36,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.45094937">
-              <caret line="19" column="71" selection-start-line="19" selection-start-column="71" selection-end-line="19" selection-end-column="71" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding>
                 <element signature="e#0#17#0" expanded="true" />
               </folding>
@@ -115,8 +114,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/alexandria.py" />
         <option value="$PROJECT_DIR$/main.py" />
+        <option value="$PROJECT_DIR$/alexandria.py" />
       </list>
     </option>
   </component>
@@ -373,7 +372,13 @@
       <option name="project" value="LOCAL" />
       <updated>1456485315584</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Refactor Exception raising into _error function">
+      <created>1456487903406</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1456487903406</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -414,7 +419,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Some PyCharm config files.&#10; &#10;Let's find out which ones to hide via .gitnore soon." />
     <MESSAGE value="Allow creation via PUT as well and implement GET" />
-    <option name="LAST_COMMIT_MESSAGE" value="Allow creation via PUT as well and implement GET" />
+    <MESSAGE value="Refactor Exception raising into _error function" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor Exception raising into _error function" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -568,22 +574,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/alexandria.py">
+    <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
           <folding>
-            <element signature="e#0#11#0" expanded="true" />
+            <element signature="e#0#17#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.py">
+    <entry file="file://$PROJECT_DIR$/alexandria.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45094937">
-          <caret line="19" column="71" selection-start-line="19" selection-start-column="71" selection-end-line="19" selection-end-column="71" />
+        <state vertical-scroll-proportion="0.23734178">
+          <caret line="10" column="46" selection-start-line="10" selection-start-column="46" selection-end-line="10" selection-end-column="46" />
           <folding>
-            <element signature="e#0#17#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
