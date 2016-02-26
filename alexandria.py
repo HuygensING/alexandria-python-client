@@ -9,7 +9,9 @@ class Alexandria:
 
     def about(self):
         r = requests.get(self.server + "/about", timeout=5.0)
-        return r
+        if r.status_code == 200:
+            return r.json()
+        self.__error(r, "Failed to contact")
 
     def get_resource(self, uuid):
         return self.__get("/resources/" + uuid).json()
@@ -27,7 +29,7 @@ class Alexandria:
             if r.status_code == 204:  # No Content
                 return uuid
 
-        raise Exception("Failed to register resource", r.status_code, r.json()['error']['message'])
+        self.__error(r, "Failed to register resource")
 
     def __get(self, endpoint):
         return self.__request(method='get', endpoint=endpoint)
@@ -45,3 +47,11 @@ class Alexandria:
         url = self.server + endpoint
         headers = {'x-ssl-client-s-dn-cn': self.auth}
         return requests.request(method=method, url=url, headers=headers, json=payload)
+
+    @staticmethod
+    def __error(r, message=None):
+        if message is None:
+            raise Exception(r.status_code, r.json()['error']['message'])
+        else:
+            raise Exception(message, r.status_code, r.json()['error']['message'])
+
