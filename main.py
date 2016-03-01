@@ -16,10 +16,9 @@ def main(argv):
     a8a = alexandria.Alexandria(args.server, args.auth)
     print(json.dumps(a8a.about()))
 
-    # a8a.register_resource("http://www.example.com/some/resource")
-    uuid = a8a.register_resource("http://www.example.com/bogus/resource", "d224ff81-b26f-4fce-a54f-56c74f6819d6")
+    uuid = a8a.register_resource("http://www.example.com/some/resource")
+    res = a8a.get_resource(uuid=uuid)
 
-    res = a8a.get_resource(uuid)
     print(res)
 
 

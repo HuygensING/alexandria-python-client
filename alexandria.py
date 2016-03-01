@@ -6,29 +6,28 @@ class Alexandria:
         self.server = server
         self.auth = auth
 
+    def endpoint_url(self, endpoint):
+        return self.server + "/" + endpoint
+
     def about(self):
-        r = requests.get(self.server + "/about", timeout=5.0)
+        r = self.__get("about")
         if r.status_code == 200:
             return r.json()
-        self.__error(r, "Failed to contact")
+        self.__raise(r, "Failed to get: " + r.url)
 
     def get_resource(self, uuid):
-        return self.__get("/resources/" + uuid).json()
+        print("UUID:", uuid)
+        endpoint = "resources/" + uuid
+        return self.__get(endpoint=endpoint).json()
 
-    def register_resource(self, uri, uuid=None):
+    def register_resource(self, uri):
         payload = {'resource': {'ref': uri}}
 
-        if uuid is None:
-            r = self.__post("/resources", payload)
-            if r.status_code == 201:  # Created
-                location = r.headers['location']
-                return location.split('/')[-1]
-        else:
-            r = self.__put("/resources/" + uuid, payload)
-            if r.status_code == 204:  # No Content
-                return uuid
+        r = self.__post(endpoint="resources", payload=payload)
+        if r.status_code == 201:  # Created
+            return r.headers['location'].split('/')[-1]
 
-        self.__error(r, "Failed to register resource")
+        self.__raise(r, "Failed to register resource: " + r.url)
 
     def __get(self, endpoint):
         return self.__request(method='get', endpoint=endpoint)
@@ -43,13 +42,19 @@ class Alexandria:
         return self.__request(method='delete', endpoint=endpoint)
 
     def __request(self, method, endpoint, payload=None):
-        url = self.server + endpoint
+        url = self.endpoint_url(endpoint)
         headers = {'x-ssl-client-s-dn-cn': self.auth}
         return requests.request(method=method, url=url, headers=headers, json=payload)
 
     @staticmethod
-    def __error(r, message=None):
+    def __raise(r, message=None):
+        try:
+            detail = r.json()['error']['message']
+        except ValueError:
+            detail = r
+
+        print("URL:", r.url)
         if message is None:
-            raise Exception(r.status_code, r.json()['error']['message'])
+            raise Exception(r.status_code, detail)
         else:
-            raise Exception(message, r.status_code, r.json()['error']['message'])
+            raise Exception(message, r.status_code, detail)
