@@ -1,7 +1,7 @@
-import alexandria
 import argparse
-import json
 import sys
+
+import alexandria
 
 
 def main(argv):
@@ -14,13 +14,15 @@ def main(argv):
     print(args)
 
     a8a = alexandria.Alexandria(args.server, args.auth)
-    print(json.dumps(a8a.about()))
+    print(a8a.about().cargo['buildDate'])
 
-    uuid = a8a.register_resource("http://www.example.com/some/resource")
-    res = a8a.get_resource(uuid=uuid)
+    uuid = a8a.add_resource(alexandria.ResourcePrototype("http://www.example.com/some/resource")).cargo
 
-    print(res)
+    print(a8a.get_resource(uuid).cargo)
 
+    print(a8a.set_resource(uuid, alexandria.ResourcePrototype("http://www.example.com/another/resource")))
+
+    print(a8a.get_resource(uuid).cargo)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
