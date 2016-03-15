@@ -14,15 +14,20 @@ def main(argv):
     print(args)
 
     a8a = alexandria.Alexandria(args.server, args.auth)
-    print(a8a.about().cargo['buildDate'])
+    about = a8a.about().cargo
+    assert about['scmBranch'] == 'develop'
+    print(about)
 
     uuid = a8a.add_resource(alexandria.ResourcePrototype("http://www.example.com/some/resource")).cargo
+    res = a8a.get_resource(uuid).cargo
+    assert res['resource']['state']['value'] == 'CONFIRMED'
+    print(res['resource']['state'])
 
-    print(a8a.get_resource(uuid).cargo)
+    a8a.set_resource(uuid, alexandria.ResourcePrototype("http://www.example.com/another/resource"))
+    res = a8a.get_resource(uuid).cargo
+    assert res['resource']['ref'] == "http://www.example.com/another/resource"
+    print(res)
 
-    print(a8a.set_resource(uuid, alexandria.ResourcePrototype("http://www.example.com/another/resource")))
-
-    print(a8a.get_resource(uuid).cargo)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
