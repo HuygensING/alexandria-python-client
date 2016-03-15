@@ -1,7 +1,9 @@
 from enum import Enum
-from http import HTTPStatus
 from urllib.parse import urljoin
 
+import http.HTTPStatus.CREATED as CREATED
+import http.HTTPStatus.NO_CONTENT as NO_CONTENT
+import http.HTTPStatus.OK as OK
 import requests
 
 from rest_requester import RestRequester
@@ -19,13 +21,13 @@ class Alexandria:
         def getter():
             return self.get(endpoint_uri(Endpoint.ABOUT))
 
-        return RestRequester(getter).on_status(HTTPStatus.OK, entity_as_cargo).invoke()
+        return RestRequester(getter).on_status(OK, entity_as_cargo).invoke()
 
     def add_resource(self, proto):
         def adder():
             return self.post(endpoint_uri(Endpoint.RESOURCES), proto.entity)
 
-        add_result = RestRequester(adder).on_status(HTTPStatus.CREATED, location_as_cargo).invoke()
+        add_result = RestRequester(adder).on_status(CREATED, location_as_cargo).invoke()
 
         if self.auto_confirm and not add_result.failed:
             self.confirm_resource(add_result.cargo)
@@ -36,16 +38,16 @@ class Alexandria:
         def getter():
             return self.get(endpoint_uri(Endpoint.RESOURCES, uuid))
 
-        return RestRequester(getter).on_status(HTTPStatus.OK, entity_as_cargo).invoke()
+        return RestRequester(getter).on_status(OK, entity_as_cargo).invoke()
 
     def set_resource(self, uuid, proto):
         def updater():
             return self.put(endpoint_uri(Endpoint.RESOURCES, uuid), proto.entity)
 
         return RestRequester(updater) \
-            .on_status(HTTPStatus.OK, entity_as_cargo) \
-            .on_status(HTTPStatus.CREATED, location_as_cargo) \
-            .on_status(HTTPStatus.NO_CONTENT, response_as_is) \
+            .on_status(OK, entity_as_cargo) \
+            .on_status(CREATED, location_as_cargo) \
+            .on_status(NO_CONTENT, response_as_is) \
             .invoke()
 
     def confirm_resource(self, uuid):
@@ -54,7 +56,7 @@ class Alexandria:
             data = StatePrototype(State.CONFIRMED).entity
             return self.put(uri=uri, data=data)
 
-        return RestRequester(confirm).on_status(HTTPStatus.NO_CONTENT, response_as_is).invoke()
+        return RestRequester(confirm).on_status(NO_CONTENT, response_as_is).invoke()
 
     def get(self, uri):
         url = urljoin(self.server, uri)
