@@ -23,7 +23,9 @@ def main(argv):
     assert res['resource']['state']['value'] == 'CONFIRMED'
     print(res['resource']['state'])
 
-    a8a.set_resource(uuid, alexandria.ResourcePrototype("http://www.example.com/another/resource"))
+    res = a8a.set_resource(uuid, alexandria.ResourcePrototype("http://www.example.com/another/resource"))
+    print("RES:", res)
+
     res = a8a.get_resource(uuid).cargo
     assert res['resource']['ref'] == "http://www.example.com/another/resource"
     print(res)
