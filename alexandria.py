@@ -57,15 +57,15 @@ class Alexandria:
         return RestRequester(confirm).on_status(HTTPStatus.NO_CONTENT, response_as_is).invoke()
 
     def get(self, uri):
-        url = urljoin(self.server, uri.lower())
+        url = urljoin(self.server, uri)
         return self.session.get(url=url)
 
     def put(self, uri, data):
-        url = urljoin(self.server, uri.lower())
+        url = urljoin(self.server, uri)
         return self.session.put(url=url, json=data)
 
     def post(self, uri, data):
-        url = urljoin(self.server, uri.lower())
+        url = urljoin(self.server, uri)
         return self.session.post(url=url, json=data)
 
     def delete(self, uri):
