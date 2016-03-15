@@ -1,5 +1,6 @@
 import argparse
 import sys
+import uuid
 
 import alexandria
 
@@ -18,17 +19,21 @@ def main(argv):
     assert about['scmBranch'] == 'develop'
     print(about)
 
-    uuid = a8a.add_resource(alexandria.ResourcePrototype("http://www.example.com/some/resource")).cargo
-    res = a8a.get_resource(uuid).cargo
+    res_id = a8a.add_resource(alexandria.ResourcePrototype("http://www.example.com/some/resource")).cargo
+    res = a8a.get_resource(res_id).cargo
     assert res['resource']['state']['value'] == 'CONFIRMED'
     print(res['resource']['state'])
 
-    res = a8a.set_resource(uuid, alexandria.ResourcePrototype("http://www.example.com/another/resource"))
+    res = a8a.set_resource(res_id, alexandria.ResourcePrototype("http://www.example.com/another/resource"))
     print("RES:", res)
 
-    res = a8a.get_resource(uuid).cargo
+    res = a8a.get_resource(res_id).cargo
     assert res['resource']['ref'] == "http://www.example.com/another/resource"
     print(res)
+
+    random_id = uuid.uuid4()
+    res = a8a.set_resource(random_id, alexandria.ResourcePrototype("http://www.example.com/somewhere/else"))
+    print("RES:", res)
 
 
 if __name__ == "__main__":
