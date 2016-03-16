@@ -2,7 +2,7 @@ import argparse
 import sys
 import uuid
 
-import alexandria
+from alexandria import Alexandria, ResourcePrototype
 
 
 def main(argv):
@@ -12,27 +12,29 @@ def main(argv):
     parser.add_argument("-c", "--cert", dest="cert_file", help='Client Certificate file')
     parser.add_argument("-s", "--server", dest="server", help='Base URI of Alexandria server')
     args = parser.parse_args(argv)
-    print(args)
+    print("ARGS:", args)
 
-    a8a = alexandria.Alexandria(args.server, args.auth)
-    about = a8a.about().cargo
+    alexandria = Alexandria(args.server, args.auth)
+    about = alexandria.about().json
     assert about['scmBranch'] == 'develop'
-    print(about)
+    print("ABOUT:", about)
 
-    res_id = a8a.add_resource(alexandria.ResourcePrototype("http://www.example.com/some/resource")).cargo
-    res = a8a.get_resource(res_id).cargo
+    resources = alexandria.resources
+
+    res_id = resources.add(ResourcePrototype("http://www.example.com/some/resource")).uuid
+    res = resources.get(res_id).json
     assert res['resource']['state']['value'] == 'CONFIRMED'
     print(res['resource']['state'])
 
-    res = a8a.set_resource(res_id, alexandria.ResourcePrototype("http://www.example.com/another/resource"))
+    res = resources.set(res_id, ResourcePrototype("http://www.example.com/another/resource"))
     print("RES:", res)
 
-    res = a8a.get_resource(res_id).cargo
+    res = resources.get(res_id).json
     assert res['resource']['ref'] == "http://www.example.com/another/resource"
     print(res)
 
     random_id = uuid.uuid4()
-    res = a8a.set_resource(random_id, alexandria.ResourcePrototype("http://www.example.com/somewhere/else"))
+    res = resources.set(random_id, ResourcePrototype("http://www.example.com/somewhere/else"))
     print("RES:", res)
 
 

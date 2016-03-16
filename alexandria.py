@@ -1,13 +1,75 @@
 from enum import Enum
+from http import HTTPStatus
 from urllib.parse import urljoin
 
-import http.HTTPStatus.CREATED as CREATED
-import http.HTTPStatus.NO_CONTENT as NO_CONTENT
-import http.HTTPStatus.OK as OK
 import requests
 
 from rest_requester import RestRequester
 from rest_result import RestResult
+
+
+class AlexandriaEndpoint:
+    def __init__(self, alexandria):
+        self.alexandria = alexandria
+
+
+class AboutEndpoint(AlexandriaEndpoint):
+    endpoint = 'about'
+
+    def __call__(self):
+        return self.get()
+
+    def get(self):
+        def getter():
+            return self.alexandria.get(self.endpoint)
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, entity_as_json).invoke()
+
+
+class ResourcesEndpoint(AlexandriaEndpoint):
+    endpoint = 'resources'
+    state = 'state'
+
+    def add(self, proto):
+        def adder():
+            return self.alexandria.post(self.endpoint, proto.entity)
+
+        add_result = RestRequester(adder).on_status(HTTPStatus.CREATED, location_as_uuid).invoke()
+
+        if self.alexandria.auto_confirm and not add_result.failed:
+            self.confirm(add_result.uuid)
+
+        return add_result
+
+    def confirm(self, uuid):
+        def confirm():
+            uri = self.resource_state_uri(uuid)
+            data = StatePrototype(State.CONFIRMED).entity
+            return self.alexandria.put(uri=uri, data=data)
+
+        return RestRequester(confirm).on_status(HTTPStatus.NO_CONTENT, response_as_is).invoke()
+
+    def get(self, uuid):
+        def getter():
+            return self.alexandria.get(endpoint_uri(self.endpoint, uuid))
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, entity_as_json).invoke()
+
+    def set(self, uuid, proto):
+        def updater():
+            return self.alexandria.put(uri=endpoint_uri(self.endpoint, uuid), data=proto.entity)
+
+        return RestRequester(updater) \
+            .on_status(HTTPStatus.OK, entity_as_json) \
+            .on_status(HTTPStatus.CREATED, location_as_uuid) \
+            .on_status(HTTPStatus.NO_CONTENT, response_as_is) \
+            .invoke()
+
+    def resource_uri(self, uuid):
+        return endpoint_uri(self.endpoint, uuid)
+
+    def resource_state_uri(self, uuid):
+        return endpoint_uri(self.endpoint, uuid, self.state)
 
 
 class Alexandria:
@@ -16,47 +78,8 @@ class Alexandria:
         self.session = requests.Session()
         self.session.headers['x-ssl-client-s-dn-cn'] = auth
         self.auto_confirm = auto_confirm
-
-    def about(self):
-        def getter():
-            return self.get(endpoint_uri(Endpoint.ABOUT))
-
-        return RestRequester(getter).on_status(OK, entity_as_cargo).invoke()
-
-    def add_resource(self, proto):
-        def adder():
-            return self.post(endpoint_uri(Endpoint.RESOURCES), proto.entity)
-
-        add_result = RestRequester(adder).on_status(CREATED, location_as_cargo).invoke()
-
-        if self.auto_confirm and not add_result.failed:
-            self.confirm_resource(add_result.cargo)
-
-        return add_result
-
-    def get_resource(self, uuid):
-        def getter():
-            return self.get(endpoint_uri(Endpoint.RESOURCES, uuid))
-
-        return RestRequester(getter).on_status(OK, entity_as_cargo).invoke()
-
-    def set_resource(self, uuid, proto):
-        def updater():
-            return self.put(endpoint_uri(Endpoint.RESOURCES, uuid), proto.entity)
-
-        return RestRequester(updater) \
-            .on_status(OK, entity_as_cargo) \
-            .on_status(CREATED, location_as_cargo) \
-            .on_status(NO_CONTENT, response_as_is) \
-            .invoke()
-
-    def confirm_resource(self, uuid):
-        def confirm():
-            uri = endpoint_uri(Endpoint.RESOURCES, uuid, "state")
-            data = StatePrototype(State.CONFIRMED).entity
-            return self.put(uri=uri, data=data)
-
-        return RestRequester(confirm).on_status(NO_CONTENT, response_as_is).invoke()
+        self.about = AboutEndpoint(self)
+        self.resources = ResourcesEndpoint(self)
 
     def get(self, uri):
         url = urljoin(self.server, uri)
@@ -74,43 +97,38 @@ class Alexandria:
         return self.session.delete(url=urljoin(self.server, uri))
 
 
+def entity_as_json(response):
+    return RestResult(json=response.json())
+
+
+def location_as_uuid(response):
+    return RestResult(uuid=response.headers['location'].split('/')[-1])
+
+
 def response_as_is(response):
     return RestResult(response=response)
-
-
-def entity_as_cargo(response):
-    return RestResult(cargo=response.json())
 
 
 def endpoint_uri(*args):
     return "/".join(map(str, args))
 
 
-def location_as_cargo(response):
-    return RestResult(cargo=response.headers['location'].split('/')[-1])
-
-
-class Prototype:
-    def entity(self, wrapper=None):
-        return {wrapper: self.__dict__} if wrapper else self.__dict__
-
-
-class ResourcePrototype(Prototype):
+class ResourcePrototype:
     def __init__(self, ref):
         self.ref = ref
 
     @property
     def entity(self):
-        return super().entity('resource')
+        return {'resource': self.__dict__}
 
 
-class StatePrototype(Prototype):
+class StatePrototype:
     def __init__(self, state):
         self.state = state.name
 
     @property
     def entity(self):
-        return super().entity()
+        return self.__dict__
 
 
 class State(Enum):
@@ -121,11 +139,3 @@ class State(Enum):
 
     def __str__(self):
         return self.name
-
-
-class Endpoint(Enum):
-    ABOUT = '/about'
-    RESOURCES = '/resources'
-
-    def __str__(self):
-        return self.name.lower()
