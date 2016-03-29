@@ -83,18 +83,26 @@ class Alexandria:
 
     def get(self, uri):
         url = urljoin(self.server, uri)
-        return self.session.get(url=url)
+        r = self.session.get(url=url)
+        r.raise_for_status()
+        return r
 
     def put(self, uri, data):
         url = urljoin(self.server, uri)
-        return self.session.put(url=url, json=data)
+        r = self.session.put(url=url, json=data)
+        r.raise_for_status()
+        return r
 
     def post(self, uri, data):
         url = urljoin(self.server, uri)
-        return self.session.post(url=url, json=data)
+        r = self.session.post(url=url, json=data)
+        r.raise_for_status()
+        return r
 
     def delete(self, uri):
-        return self.session.delete(url=urljoin(self.server, uri))
+        r = self.session.delete(url=urljoin(self.server, uri))
+        r.raise_for_status()
+        return r
 
 
 def entity_as_json(response):
