@@ -71,12 +71,23 @@ class ResourcesEndpoint(AlexandriaEndpoint):
     def resource_state_uri(self, uuid):
         return endpoint_uri(self.endpoint, uuid, self.state)
 
+    def set_text(self,uuid,xml):
+        def setter():
+            return self.alexandria.put(uri=endpoint_uri(self.endpoint, uuid, 'text'), data=xml)
+
+        return RestRequester(setter) \
+            .on_status(HTTPStatus.OK, entity_as_json) \
+            .on_status(HTTPStatus.CREATED, location_as_uuid) \
+            .invoke()
+
+
 
 class Alexandria:
-    def __init__(self, server, auth="", auto_confirm=True):
+    def __init__(self, server, admin_key="", auth="", auto_confirm=True):
         self.server = server if server.endswith('/') else server + '/'
         self.session = requests.Session()
         self.session.headers['x-ssl-client-s-dn-cn'] = auth
+        self.session.headers['Auth'] = 'SimpleAuth ' + admin_key
         self.auto_confirm = auto_confirm
         self.about = AboutEndpoint(self)
         self.resources = ResourcesEndpoint(self)
