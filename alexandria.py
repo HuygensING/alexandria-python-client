@@ -73,7 +73,7 @@ class ResourcesEndpoint(AlexandriaEndpoint):
 
 
 class Alexandria:
-    def __init__(self, server, auth, auto_confirm=True):
+    def __init__(self, server, auth="", auto_confirm=True):
         self.server = server if server.endswith('/') else server + '/'
         self.session = requests.Session()
         self.session.headers['x-ssl-client-s-dn-cn'] = auth
