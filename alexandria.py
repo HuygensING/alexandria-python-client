@@ -71,15 +71,36 @@ class ResourcesEndpoint(AlexandriaEndpoint):
     def resource_state_uri(self, uuid):
         return endpoint_uri(self.endpoint, uuid, self.state)
 
-    def set_text(self,uuid,xml):
+    def set_text(self, uuid, xml):
         def setter():
-            return self.alexandria.put(uri=endpoint_uri(self.endpoint, uuid, 'text'), data=xml)
+            return self.alexandria.put_data(uri=endpoint_uri(self.endpoint, uuid, 'text'), data=xml)
 
-        return RestRequester(setter) \
-            .on_status(HTTPStatus.OK, entity_as_json) \
-            .on_status(HTTPStatus.CREATED, location_as_uuid) \
+        def status_getter():
+            return self.alexandria.get(uri=endpoint_uri(self.endpoint, uuid, 'text', 'status'))
+
+        RestRequester(setter) \
+            .on_status(HTTPStatus.OK, response_as_is) \
             .invoke()
+        done = False
+        while not done:
+            status = RestRequester(status_getter) \
+                .on_status(HTTPStatus.OK, entity_as_json) \
+                .invoke().json
+            done = status['textImportStatus']['done']
+        return status
 
+    def get_text(self, uuid):
+        def getter():
+            return self.alexandria.get(endpoint_uri(endpoint_uri(self.endpoint, uuid, 'text', 'xml')))
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
+
+
+    def get_dot(self, uuid):
+        def getter():
+            return self.alexandria.get(endpoint_uri(endpoint_uri(self.endpoint, uuid, 'text', 'dot')))
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
 
 
 class Alexandria:
@@ -101,6 +122,12 @@ class Alexandria:
     def put(self, uri, data):
         url = urljoin(self.server, uri)
         r = self.session.put(url=url, json=data)
+        r.raise_for_status()
+        return r
+
+    def put_data(self, uri, data):
+        url = urljoin(self.server, uri)
+        r = self.session.put(url=url, data=data)
         r.raise_for_status()
         return r
 

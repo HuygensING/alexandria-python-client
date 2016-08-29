@@ -1,6 +1,6 @@
 import sys
 from IPython.display import Image, display
-
+import pydot
 
 class ResourceProxy:
     def __init__(self, resource_id, uuid, alexandria):
@@ -19,7 +19,10 @@ class ResourceProxy:
 
     def show_graph(self):
         dot = self.export_dot()
-        png = Image(dot.create_png())
+        graphs = pydot.graph_from_dot_data(dot)
+        (g,) = graphs
+        png_data = g.create(format='png')
+        png = Image(png_data)
         display(png)
 
     def __str__(self):
