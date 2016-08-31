@@ -1,11 +1,11 @@
+import requests
+
 from enum import Enum
 from http import HTTPStatus
 from urllib.parse import urljoin
 
-import requests
-
-from rest_requester import RestRequester
-from rest_result import RestResult
+from alexandria_client.rest_requester import RestRequester
+from alexandria_client.rest_result import RestResult
 
 
 class AlexandriaEndpoint:
@@ -94,7 +94,6 @@ class ResourcesEndpoint(AlexandriaEndpoint):
             return self.alexandria.get(endpoint_uri(endpoint_uri(self.endpoint, uuid, 'text', 'xml')))
 
         return RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
-
 
     def get_dot(self, uuid):
         def getter():

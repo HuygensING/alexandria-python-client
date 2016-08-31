@@ -2,7 +2,7 @@ import argparse
 import sys
 import uuid
 
-from alexandria import Alexandria, ResourcePrototype
+from alexandria_client.alexandria import Alexandria, ResourcePrototype
 
 
 def main(argv):

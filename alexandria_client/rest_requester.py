@@ -1,6 +1,6 @@
 from requests.packages.urllib3.exceptions import MaxRetryError
 
-from rest_result import RestResult
+from alexandria_client.rest_result import RestResult
 
 
 class RestRequester:
