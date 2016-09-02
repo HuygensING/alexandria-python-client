@@ -12,11 +12,17 @@ class ResourceProxy:
         self.uuid = uuid
         self.resources = alexandria.resources
 
+    def __dir__(self):
+        return ['id', 'uuid', 'set_xml', 'get_xml', 'export_dot', 'show_graph', 'set_view']
+
     def set_xml(self, xml):
         self.resources.set_text(self.uuid, xml)
 
     def get_xml(self):
         return self.resources.get_text(self.uuid)
+
+    def get_xml_using_view(self, view_name):
+        return self.resources.get_text_using_view(self.uuid, view_name)
 
     def export_dot(self):
         return self.resources.get_dot(self.uuid)
@@ -30,7 +36,7 @@ class ResourceProxy:
         display(png)
 
     def set_view(self, text_view):
-        self.resources.set_view(text_view.name, text_view)
+        self.resources.set_view(self.uuid, text_view.name, text_view)
 
     def __str__(self):
         return "ResourceProxy::" + self.id

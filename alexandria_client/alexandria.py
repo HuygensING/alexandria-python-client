@@ -1,4 +1,5 @@
 import requests
+import time
 
 from enum import Enum
 from http import HTTPStatus
@@ -83,6 +84,7 @@ class ResourcesEndpoint(AlexandriaEndpoint):
             .invoke()
         done = False
         while not done:
+            time.sleep(1)
             status = RestRequester(status_getter) \
                 .on_status(HTTPStatus.OK, entity_as_json) \
                 .invoke().json
@@ -95,11 +97,24 @@ class ResourcesEndpoint(AlexandriaEndpoint):
 
         return RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
 
+    def get_text_using_view(self, uuid, view_name):
+        def getter():
+            return self.alexandria.get(
+                endpoint_uri(endpoint_uri(self.endpoint, uuid, 'text', 'xml') + "?view=" + view_name))
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
+
     def get_dot(self, uuid):
         def getter():
             return self.alexandria.get(endpoint_uri(endpoint_uri(self.endpoint, uuid, 'text', 'dot')))
 
         return RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
+
+    def set_view(self, uuid, name, view):
+        def updater():
+            return self.alexandria.put(uri=endpoint_uri(self.endpoint, uuid, 'text', 'views', name), data=view.entity)
+
+        return RestRequester(updater).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
 
 
 class Alexandria:
@@ -120,12 +135,14 @@ class Alexandria:
 
     def put(self, uri, data):
         url = urljoin(self.server, uri)
+        self.session.headers['content-type'] = 'application/json'
         r = self.session.put(url=url, json=data)
         r.raise_for_status()
         return r
 
     def put_data(self, uri, data):
         url = urljoin(self.server, uri)
+        self.session.headers['content-type'] = 'text/xml'
         r = self.session.put(url=url, data=data)
         r.raise_for_status()
         return r

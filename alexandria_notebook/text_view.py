@@ -7,14 +7,12 @@ class TextView:
         self.description = ""
         self.elements = []
 
-    def description(self, description: str):
-        self.description = description
-        return self
+    def __dir__(self):
+        return ['name', 'description', 'elements']
 
-    def add_element(self, element: Element):
-        self.elements.append(element)
-        return self
-
-    def elements(self, elements):
-        self.elements = elements
-        return self
+    @property
+    def entity(self):
+        element_dict = {}
+        for e in self.elements:
+            element_dict[e.name] = {'elementMode': e.element_mode, 'attributeMode': e.attribute_mode}
+        return {'textView': {'description': self.description, 'elements': element_dict}}

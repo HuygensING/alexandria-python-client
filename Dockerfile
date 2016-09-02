@@ -1,6 +1,10 @@
 FROM jupyter/datascience-notebook
 # user is set to jovyan
 
+USER root
+run apt-get update && apt-get install -y graphviz
+
+USER jovyan
 ENV vol=$HOME/work
 VOLUME ${vol}
 COPY example.ipynb  ${vol}/
