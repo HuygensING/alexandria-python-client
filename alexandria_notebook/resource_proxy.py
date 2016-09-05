@@ -38,5 +38,11 @@ class ResourceProxy:
     def set_view(self, text_view):
         self.resources.set_view(self.uuid, text_view.name, text_view)
 
+    def set_annotator(self, annotator):
+        self.resources.set_annotator(self.uuid, annotator)
+
+    def get_annotators(self):
+        return self.resources.get_annotators(self.uuid)
+
     def __str__(self):
         return "ResourceProxy::" + self.id

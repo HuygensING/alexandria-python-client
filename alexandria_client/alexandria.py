@@ -7,6 +7,7 @@ from urllib.parse import urljoin
 
 from alexandria_client.rest_requester import RestRequester
 from alexandria_client.rest_result import RestResult
+from alexandria_client.annotator import Annotator
 
 
 class AlexandriaEndpoint:
@@ -115,6 +116,23 @@ class ResourcesEndpoint(AlexandriaEndpoint):
             return self.alexandria.put(uri=endpoint_uri(self.endpoint, uuid, 'text', 'views', name), data=view.entity)
 
         return RestRequester(updater).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
+
+    def set_annotator(self, uuid, annotator):
+        def updater():
+            return self.alexandria.put(uri=endpoint_uri(self.endpoint, uuid, 'annotators', annotator.name),
+                                       data=annotator.entity)
+
+        return RestRequester(updater).on_status(HTTPStatus.OK, response_as_is).invoke().response.text
+
+    def get_annotators(self, uuid):
+        def getter():
+            return self.alexandria.get(endpoint_uri(endpoint_uri(self.endpoint, uuid, 'annotators')))
+
+        json = RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.json()
+        annotators = []
+        for a in json:
+            annotators.append(Annotator(a['annotator']['code'], a['annotator']['description']))
+        return annotators
 
 
 class Alexandria:
