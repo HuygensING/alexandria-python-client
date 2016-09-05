@@ -1,6 +1,6 @@
 from alexandria_client.alexandria import *
-from alexandria_notebook.resource_proxy import ResourceProxy
 from alexandria_client.resource_prototype import ResourcePrototype
+from alexandria_notebook.resource_proxy import ResourceProxy
 
 
 class AlexandriaProxy:

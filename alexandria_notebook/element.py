@@ -1,8 +1,3 @@
-import json
-
-from enum import Enum
-
-
 class Element:
     def __init__(self, name, element_mode, attribute_mode='hideAll'):
         self.name = name

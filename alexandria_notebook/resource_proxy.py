@@ -1,6 +1,4 @@
-import sys
 import pydot
-
 from IPython.display import Image, display
 
 from alexandria_client.alexandria import Alexandria

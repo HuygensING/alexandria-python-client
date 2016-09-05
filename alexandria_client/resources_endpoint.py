@@ -1,13 +1,12 @@
 import time
-import alexandria_client.util as util
-
 from http import HTTPStatus
 
-from alexandria_client.state_prototype import *
-from alexandria_client.state import *
-from alexandria_client.annotator import Annotator
+import alexandria_client.util as util
 from alexandria_client.alexandria_endpoint import AlexandriaEndpoint
+from alexandria_client.annotator import Annotator
 from alexandria_client.rest_requester import RestRequester
+from alexandria_client.state import *
+from alexandria_client.state_prototype import *
 
 
 class ResourcesEndpoint(AlexandriaEndpoint):
