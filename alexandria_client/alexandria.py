@@ -129,9 +129,7 @@ class ResourcesEndpoint(AlexandriaEndpoint):
             return self.alexandria.get(endpoint_uri(endpoint_uri(self.endpoint, uuid, 'annotators')))
 
         json = RestRequester(getter).on_status(HTTPStatus.OK, response_as_is).invoke().response.json()
-        annotators = []
-        for a in json:
-            annotators.append(Annotator(a['annotator']['code'], a['annotator']['description']))
+        annotators = [Annotator(a['annotator']['code'], a['annotator']['description']) for a in json]
         return annotators
 
 

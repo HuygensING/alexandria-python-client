@@ -1,5 +1,15 @@
 class Annotator:
+    """
+    Someone who can make text annotations
+    """
+
     def __init__(self, name, description=""):
+        """
+        :param name:
+        :type str:
+        :param description:
+        :type str:
+        """
         self.name = name
         self.description = description
 
