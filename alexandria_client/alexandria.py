@@ -122,7 +122,8 @@ class Alexandria:
         self.server = server if server.endswith('/') else server + '/'
         self.session = requests.Session()
         self.session.headers['x-ssl-client-s-dn-cn'] = auth
-        self.session.headers['Auth'] = 'SimpleAuth ' + admin_key
+        self.session.headers['auth'] = 'SimpleAuth ' + admin_key
+        self.session.headers['content-type'] = 'application/json'
         self.auto_confirm = auto_confirm
         self.about = AboutEndpoint(self)
         self.resources = ResourcesEndpoint(self)
@@ -135,15 +136,16 @@ class Alexandria:
 
     def put(self, uri, data):
         url = urljoin(self.server, uri)
-        self.session.headers['content-type'] = 'application/json'
         r = self.session.put(url=url, json=data)
         r.raise_for_status()
         return r
 
     def put_data(self, uri, data):
         url = urljoin(self.server, uri)
+        current_content_type = self.session.headers.get('content-type')
         self.session.headers['content-type'] = 'text/xml'
         r = self.session.put(url=url, data=data)
+        self.session.headers['content-type'] = current_content_type
         r.raise_for_status()
         return r
 

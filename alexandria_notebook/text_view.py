@@ -15,4 +15,6 @@ class TextView:
         element_dict = {}
         for e in self.elements:
             element_dict[e.name] = {'elementMode': e.element_mode, 'attributeMode': e.attribute_mode}
+            if e.when is not None:
+                element_dict[e.name]['when'] = e.when
         return {'textView': {'description': self.description, 'elements': element_dict}}

@@ -8,15 +8,17 @@ class Element:
         self.name = name
         self.element_mode = element_mode
         self.attribute_mode = attribute_mode
+        self.when = None
         self._validate()
 
     def set_element_mode(self, mode):
         self.element_mode = mode
-        return self
 
     def set_attribute_mode(self, mode):
         self.attribute_mode = mode
-        return self
+
+    def set_when(self, when):
+        self.when = when
 
     def _validate(self):
         self._validate_name(self.name)
