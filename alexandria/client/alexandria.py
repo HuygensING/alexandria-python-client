@@ -1,11 +1,11 @@
 from urllib.parse import urljoin
 
 import requests
-from alexandria.about_endpoint import AboutEndpoint
-from alexandria.annotations_endpoint import AnnotationsEndpoint
-from alexandria.searches_endpoint import SearchesEndpoint
 
+from alexandria.client.about_endpoint import AboutEndpoint
+from alexandria.client.annotations_endpoint import AnnotationsEndpoint
 from alexandria.client.resources_endpoint import ResourcesEndpoint
+from alexandria.client.searches_endpoint import SearchesEndpoint
 
 
 class Alexandria:

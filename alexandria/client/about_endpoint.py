@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
-import alexandria.util as util
-from alexandria.rest_requester import RestRequester
+import alexandria.client.util as util
+from alexandria.client.rest_requester import RestRequester
 
 from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
 
