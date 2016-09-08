@@ -1,9 +1,9 @@
 from http import HTTPStatus
 
-import alexandria_client.util as util
+import alexandria.util as util
+from alexandria.rest_requester import RestRequester
 
-from alexandria_client.alexandria_endpoint import AlexandriaEndpoint
-from alexandria_client.rest_requester import RestRequester
+from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
 
 
 class AboutEndpoint(AlexandriaEndpoint):

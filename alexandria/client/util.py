@@ -1,4 +1,4 @@
-from alexandria_client.rest_result import RestResult
+from alexandria.client.rest_result import RestResult
 
 
 def entity_as_json(response):

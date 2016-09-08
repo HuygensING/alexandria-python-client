@@ -1,12 +1,13 @@
 import time
 from http import HTTPStatus
 
-import alexandria_client.util as util
-from alexandria_client.alexandria_endpoint import AlexandriaEndpoint
-from alexandria_client.annotator import Annotator
-from alexandria_client.rest_requester import RestRequester
-from alexandria_client.state import *
-from alexandria_client.state_prototype import *
+import alexandria.util as util
+from alexandria.annotator import Annotator
+from alexandria.rest_requester import RestRequester
+from alexandria.state import *
+from alexandria.state_prototype import *
+
+from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
 
 
 class ResourcesEndpoint(AlexandriaEndpoint):
@@ -113,3 +114,15 @@ class ResourcesEndpoint(AlexandriaEndpoint):
         json = RestRequester(getter).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.json()
         annotators = [Annotator(a['annotator']['code'], a['annotator']['description']) for a in json]
         return annotators
+
+    def set_text_annotation(self, text_annotation):
+        pass
+
+    def add_unique_ids(self, uuid, elements):
+        resource_ids = [uuid]
+        cargo = {"resourceIds": resource_ids, "elements": elements}
+
+        def poster():
+            return self.alexandria.post(uri=util.endpoint_uri('commands', 'add-unique-id'), data=cargo.entity)
+
+        return RestRequester(poster).on_status(HTTPStatus.OK, util.response_as_is).invoke().response.text

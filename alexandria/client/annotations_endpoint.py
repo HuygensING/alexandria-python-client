@@ -1,4 +1,4 @@
-from alexandria_client.alexandria_endpoint import AlexandriaEndpoint
+from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
 
 
 class AnnotationsEndpoint(AlexandriaEndpoint):
