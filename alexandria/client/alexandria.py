@@ -1,11 +1,13 @@
+from http import HTTPStatus
 from urllib.parse import urljoin
 
 import requests
 
+import alexandria.client.util as util
 from alexandria.client.about_endpoint import AboutEndpoint
 from alexandria.client.annotations_endpoint import AnnotationsEndpoint
 from alexandria.client.resources_endpoint import ResourcesEndpoint
-from alexandria.client.searches_endpoint import SearchesEndpoint
+from alexandria.client.rest_requester import RestRequester
 
 
 class Alexandria:
@@ -18,7 +20,7 @@ class Alexandria:
         self.auto_confirm = auto_confirm
         self.about = AboutEndpoint(self)
         self.resources = ResourcesEndpoint(self)
-        self.searches = SearchesEndpoint(self)
+        # self.searches = SearchesEndpoint(self)
         self.annotations = AnnotationsEndpoint(self)
 
     def get(self, uri):
@@ -52,3 +54,14 @@ class Alexandria:
         r = self.session.delete(url=urljoin(self.server, uri))
         r.raise_for_status()
         return r
+
+    def do_xpath(self, resource_view_ids, xpath):
+        entity = {
+            'resourceIds': resource_view_ids,
+            'xpath': xpath
+        }
+
+        def poster():
+            return self.post(util.endpoint_uri('commands', 'xpath'), entity)
+
+        return RestRequester(poster).on_status(HTTPStatus.OK, util.entity_as_json).invoke().json
