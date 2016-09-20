@@ -1,3 +1,4 @@
+import time
 from http import HTTPStatus
 from urllib.parse import urljoin
 
@@ -64,4 +65,29 @@ class Alexandria:
         def poster():
             return self.post(util.endpoint_uri('commands', 'xpath'), entity)
 
+        def status_getter():
+            return self.alexandria.get(uri=util.endpoint_uri(self.endpoint, uuid, 'text', 'status'))
+
         return RestRequester(poster).on_status(HTTPStatus.OK, util.entity_as_json).invoke().json
+
+    def aql2(self, aql2_command):
+        entity = {'command': aql2_command}
+
+        def poster():
+            return self.post(util.endpoint_uri('commands', 'aql2'), entity)
+
+        response = RestRequester(poster).on_status(HTTPStatus.OK, util.response_as_is).invoke().response
+        status_uri = response.headers['location']
+
+        def status_getter():
+            return self.get(uri=status_uri)
+
+        done = False
+        while not done:
+            time.sleep(1)
+            status = RestRequester(status_getter) \
+                .on_status(HTTPStatus.OK, util.entity_as_json) \
+                .invoke().json
+            done = status['commandStatus']['done']
+
+        return status
