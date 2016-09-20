@@ -90,4 +90,4 @@ class Alexandria:
                 .invoke().json
             done = status['commandStatus']['done']
 
-        return status
+        return status['commandStatus']
