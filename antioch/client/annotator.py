@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,24 @@
    limitations under the License.
 """
 
+class Annotator:
+    """
+    Someone who can make text annotations
+    """
 
-from distutils.core import setup
+    def __init__(self, name, description=""):
+        """
+        :param name:
+        :type str:
+        :param description:
+        :type str:
+        """
+        self.name = name
+        self.description = description
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+    @property
+    def entity(self):
+        return {'annotator': {'description': self.description}}
+
+    def __repr__(self):
+        return "Annotator::" + self.name + " (" + self.description + ")"

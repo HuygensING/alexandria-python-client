@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,11 @@
    limitations under the License.
 """
 
-
-from distutils.core import setup
-
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+class Query:
+    def __init__(self):
+        self.what = "annotation"
+        self.where = None
+        self.sort = None
+        self.return_fields = None
+        self.distinct = None
+        self.page_size = None

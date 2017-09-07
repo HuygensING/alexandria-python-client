@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,21 @@
    limitations under the License.
 """
 
+from antioch.client.rest_result import RestResult
 
-from distutils.core import setup
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+class RestRequester:
+    def __init__(self, response_supplier):
+        self.status_mappers = {}
+        self.response_supplier = response_supplier
+
+    def on_status(self, status, func):
+        self.status_mappers[status] = func
+        return self
+
+    def invoke(self):
+        response = self.response_supplier()
+        try:
+            return self.status_mappers[response.status_code](response)
+        except KeyError:
+            return RestResult(failed=True, response=response)

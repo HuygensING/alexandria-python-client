@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,13 @@
    limitations under the License.
 """
 
+class RestResult:
+    def __init__(self, uuid=None, json=None, failed=False, response=None):
+        self.uuid = uuid
+        self.json = json
+        self.failed = failed
+        self.response = response
 
-from distutils.core import setup
-
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+    def __str__(self):
+        return "<RestResult failed={}, uuid={}, json={}, response={}>" \
+            .format(self.failed, self.uuid, self.json, self.response)

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,17 @@
    limitations under the License.
 """
 
+from antioch.client.antioch_endpoint import AntiochEndpoint
 
-from distutils.core import setup
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+class AnnotationsEndpoint(AntiochEndpoint):
+    endpoint = 'annotations'
+
+    def __call__(self):
+        return self.get()
+
+    def post(self, query):
+        def getter():
+            return self.antioch.get(self.endpoint)
+
+        return self.antioch.post(self.endpoint, query.entity)

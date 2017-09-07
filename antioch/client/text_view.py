@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -16,12 +15,20 @@
 """
 
 
-from distutils.core import setup
+class TextView:
+    def __init__(self, name):
+        self.name = name
+        self.description = ""
+        self.elements = []
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+    def __dir__(self):
+        return ['name', 'description', 'elements']
+
+    @property
+    def entity(self):
+        element_dict = {}
+        for e in self.elements:
+            element_dict[e.name] = {'elementMode': e.element_mode, 'attributeMode': e.attribute_mode}
+            if e.when is not None:
+                element_dict[e.name]['when'] = e.when
+        return {'textView': {'description': self.description, 'elements': element_dict}}

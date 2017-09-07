@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,22 @@
    limitations under the License.
 """
 
+from http import HTTPStatus
 
-from distutils.core import setup
+import antioch.client.util as util
+from antioch.client.rest_requester import RestRequester
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+from antioch.client.antioch_endpoint import AntiochEndpoint
+
+
+class AboutEndpoint(AntiochEndpoint):
+    endpoint = 'about'
+
+    def __call__(self):
+        return self.get()
+
+    def get(self):
+        def getter():
+            return self.antioch.get(self.endpoint)
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, util.entity_as_json).invoke()

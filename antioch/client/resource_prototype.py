@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,10 @@
    limitations under the License.
 """
 
+class ResourcePrototype:
+    def __init__(self, ref):
+        self.ref = ref
 
-from distutils.core import setup
-
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+    @property
+    def entity(self):
+        return {'resource': self.__dict__}

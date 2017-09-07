@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,14 @@
    limitations under the License.
 """
 
+from enum import Enum
 
-from distutils.core import setup
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+class State(Enum):
+    TENTATIVE = 0
+    CONFIRMED = 1
+    DELETED = 2
+    DEPRECATED = 3
+
+    def __str__(self):
+        return self.name

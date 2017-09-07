@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,20 @@
    limitations under the License.
 """
 
+from antioch.client.rest_result import RestResult
 
-from distutils.core import setup
 
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+def entity_as_json(response):
+    return RestResult(json=response.json())
+
+
+def location_as_uuid(response):
+    return RestResult(uuid=response.headers['location'].split('/')[-1])
+
+
+def response_as_is(response):
+    return RestResult(response=response)
+
+
+def endpoint_uri(*args):
+    return "/".join(map(str, args))

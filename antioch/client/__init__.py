@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
    Copyright 2017 Huygens ING
 
@@ -15,13 +14,8 @@
    limitations under the License.
 """
 
+import glob
+from os.path import dirname, basename, isfile
 
-from distutils.core import setup
-
-setup(name='AntiochClient',
-      version='1.0',
-      description='Client to interact with antioch server',
-      author='HuygensING',
-      author_email='antioch@huygens.knaw.nl',
-      packages=['antioch.client']
-      )
+modules = glob.glob(dirname(__file__) + "/*.py")
+__all__ = [basename(f)[:-3] for f in modules if isfile(f)]

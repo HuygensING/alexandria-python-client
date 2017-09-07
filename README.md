@@ -1,5 +1,5 @@
 # alexandria-python-client
-Python bindings for Alexandria
+Python bindings for Antioch
 
 to install:
 
