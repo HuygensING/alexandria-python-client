@@ -20,7 +20,7 @@ import uuid
 
 from antioch.client.resource_prototype import *
 
-from antioch.client.antoioch import Antioch
+from antioch.client.antioch import Antioch
 
 
 def main(argv):
