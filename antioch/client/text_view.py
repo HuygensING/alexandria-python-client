@@ -14,20 +14,21 @@
    limitations under the License.
 """
 
-from alexandria.client.rest_result import RestResult
 
+class TextView:
+    def __init__(self, name):
+        self.name = name
+        self.description = ""
+        self.elements = []
 
-def entity_as_json(response):
-    return RestResult(json=response.json())
+    def __dir__(self):
+        return ['name', 'description', 'elements']
 
-
-def location_as_uuid(response):
-    return RestResult(uuid=response.headers['location'].split('/')[-1])
-
-
-def response_as_is(response):
-    return RestResult(response=response)
-
-
-def endpoint_uri(*args):
-    return "/".join(map(str, args))
+    @property
+    def entity(self):
+        element_dict = {}
+        for e in self.elements:
+            element_dict[e.name] = {'elementMode': e.element_mode, 'attributeMode': e.attribute_mode}
+            if e.when is not None:
+                element_dict[e.name]['when'] = e.when
+        return {'textView': {'description': self.description, 'elements': element_dict}}

@@ -18,9 +18,9 @@ import argparse
 import sys
 import uuid
 
-from alexandria.client.resource_prototype import *
+from antioch.client.resource_prototype import *
 
-from alexandria.client.alexandria import Alexandria
+from antioch.client.antoioch import Antioch
 
 
 def main(argv):
@@ -32,7 +32,7 @@ def main(argv):
     args = parser.parse_args(argv)
     print("ARGS:", args)
 
-    alexandria = Alexandria(args.server, args.auth)
+    alexandria = Antioch(args.server, args.auth)
     about = alexandria.about().json
     assert about['scmBranch'] == 'develop'
     print("ABOUT:", about)

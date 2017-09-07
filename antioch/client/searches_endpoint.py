@@ -14,22 +14,17 @@
    limitations under the License.
 """
 
-from http import HTTPStatus
-
-import alexandria.client.util as util
-from alexandria.client.rest_requester import RestRequester
-
-from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
+from antioch.client.antioch_endpoint import AntiochEndpoint
 
 
-class AboutEndpoint(AlexandriaEndpoint):
-    endpoint = 'about'
+class SearchesEndpoint(AntiochEndpoint):
+    endpoint = 'searches'
 
-    def __call__(self):
-        return self.get()
+    # def __call__(self):
+    #     return self.get()
 
-    def get(self):
+    def post(self, query):
         def getter():
-            return self.alexandria.get(self.endpoint)
+            return self.antioch.get(self.endpoint)
 
-        return RestRequester(getter).on_status(HTTPStatus.OK, util.entity_as_json).invoke()
+        return self.antioch.post(self.endpoint, query.entity)

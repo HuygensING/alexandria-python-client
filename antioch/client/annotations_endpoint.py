@@ -14,10 +14,10 @@
    limitations under the License.
 """
 
-from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
+from antioch.client.antioch_endpoint import AntiochEndpoint
 
 
-class AnnotationsEndpoint(AlexandriaEndpoint):
+class AnnotationsEndpoint(AntiochEndpoint):
     endpoint = 'annotations'
 
     def __call__(self):
@@ -25,6 +25,6 @@ class AnnotationsEndpoint(AlexandriaEndpoint):
 
     def post(self, query):
         def getter():
-            return self.alexandria.get(self.endpoint)
+            return self.antioch.get(self.endpoint)
 
-        return self.alexandria.post(self.endpoint, query.entity)
+        return self.antioch.post(self.endpoint, query.entity)

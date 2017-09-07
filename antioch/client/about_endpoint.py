@@ -14,21 +14,22 @@
    limitations under the License.
 """
 
-from alexandria.client.rest_result import RestResult
+from http import HTTPStatus
+
+import antioch.client.util as util
+from antioch.client.rest_requester import RestRequester
+
+from antioch.client.antioch_endpoint import AntiochEndpoint
 
 
-class RestRequester:
-    def __init__(self, response_supplier):
-        self.status_mappers = {}
-        self.response_supplier = response_supplier
+class AboutEndpoint(AntiochEndpoint):
+    endpoint = 'about'
 
-    def on_status(self, status, func):
-        self.status_mappers[status] = func
-        return self
+    def __call__(self):
+        return self.get()
 
-    def invoke(self):
-        response = self.response_supplier()
-        try:
-            return self.status_mappers[response.status_code](response)
-        except KeyError:
-            return RestResult(failed=True, response=response)
+    def get(self):
+        def getter():
+            return self.antioch.get(self.endpoint)
+
+        return RestRequester(getter).on_status(HTTPStatus.OK, util.entity_as_json).invoke()

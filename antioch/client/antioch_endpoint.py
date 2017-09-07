@@ -14,17 +14,6 @@
    limitations under the License.
 """
 
-from alexandria.client.alexandria_endpoint import AlexandriaEndpoint
-
-
-class SearchesEndpoint(AlexandriaEndpoint):
-    endpoint = 'searches'
-
-    # def __call__(self):
-    #     return self.get()
-
-    def post(self, query):
-        def getter():
-            return self.alexandria.get(self.endpoint)
-
-        return self.alexandria.post(self.endpoint, query.entity)
+class AntiochEndpoint:
+    def __init__(self, antioch):
+        self.antioch = antioch

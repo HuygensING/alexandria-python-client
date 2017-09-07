@@ -20,14 +20,14 @@ from urllib.parse import urljoin
 
 import requests
 
-import alexandria.client.util as util
-from alexandria.client.about_endpoint import AboutEndpoint
-from alexandria.client.annotations_endpoint import AnnotationsEndpoint
-from alexandria.client.resources_endpoint import ResourcesEndpoint
-from alexandria.client.rest_requester import RestRequester
+import antioch.client.util as util
+from antioch.client.about_endpoint import AboutEndpoint
+from antioch.client.annotations_endpoint import AnnotationsEndpoint
+from antioch.client.resources_endpoint import ResourcesEndpoint
+from antioch.client.rest_requester import RestRequester
 
 
-class Alexandria:
+class Antioch:
     def __init__(self, server, admin_key="", auth="", auto_confirm=True):
         self.server = server if server.endswith('/') else server + '/'
         self.session = requests.Session()
@@ -82,28 +82,7 @@ class Alexandria:
             return self.post(util.endpoint_uri('commands', 'xpath'), entity)
 
         def status_getter():
-            return self.alexandria.get(uri=util.endpoint_uri(self.endpoint, uuid, 'text', 'status'))
+            return self.antioch.get(uri=util.endpoint_uri(self.endpoint, self.uuid, 'text', 'status'))
 
         return RestRequester(poster).on_status(HTTPStatus.OK, util.entity_as_json).invoke().json
 
-    def aql2(self, aql2_command):
-        entity = {'command': aql2_command}
-
-        def poster():
-            return self.post(util.endpoint_uri('commands', 'aql2'), entity)
-
-        response = RestRequester(poster).on_status(HTTPStatus.OK, util.response_as_is).invoke().response
-        status_uri = response.headers['location']
-
-        def status_getter():
-            return self.get(uri=status_uri)
-
-        done = False
-        while not done:
-            time.sleep(1)
-            status = RestRequester(status_getter) \
-                .on_status(HTTPStatus.OK, util.entity_as_json) \
-                .invoke().json
-            done = status['commandStatus']['done']
-
-        return status['commandStatus']
